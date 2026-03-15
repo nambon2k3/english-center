@@ -234,7 +234,9 @@
                                         <td>${classroom.id}</td>
                                         <td class="td-name">
                                             <div style="font-weight: 500;">
-                                                ${classroom.className}
+                                                <a href="${pageContext.request.contextPath}/class-detail?id=${classroom.id}" style="text-decoration: underline">
+                                                    ${classroom.className}
+                                                </a>
                                             </div>
                                         </td>
                                         <td class="td-name">${classroom.level.levelName}</td>

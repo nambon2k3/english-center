@@ -215,4 +215,35 @@ public class ClassesDAO extends BaseDAO {
         return false;
     }
 
+    public Classroom getClassroomById(long id) {
+
+        String sql = """
+        SELECT c.*,
+               l.level_name,
+               u.full_name
+        FROM classes c
+        LEFT JOIN levels l ON c.level_id = l.id
+        LEFT JOIN users u ON c.teacher_id = u.id
+        WHERE c.id = ?
+        LIMIT 1
+        """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setLong(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return Mapper.extractClassroom(rs);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("[ClassroomDAO] getClassroomById: Failed with error: " + e.getMessage());
+        }
+
+        return null;
+    }
+
 }
