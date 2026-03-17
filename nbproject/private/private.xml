@@ -3,14 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/DAO/UserDAO.java</file>
-            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/web/login.jsp</file>
-            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/Utils/Mapper.java</file>
-            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/DAO/BaseDAO.java</file>
-            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/Controller/LoginController.java</file>
-            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/Model/Role.java</file>
-            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/Model/BaseModel.java</file>
-            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/web/css/style.css</file>
+            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/Controller/ClassDetailController.java</file>
+            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/Model/Classroom.java</file>
+            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/web/classrooms.jsp</file>
+            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/web/class-detail.jsp</file>
+            <file>file:/C:/Users/Legion/Documents/NetBeansProjects/EnglistCenterManagement/src/java/DAO/ClassesDAO.java</file>
         </group>
     </open-files>
 </project-private>

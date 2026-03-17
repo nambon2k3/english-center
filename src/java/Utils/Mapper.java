@@ -4,7 +4,10 @@
  */
 package Utils;
 
+import Model.ClassSchedule;
 import Model.Classroom;
+import Model.Enrollment;
+import Model.Enum.EnrollmentStatus;
 import Model.Level;
 import Model.Role;
 import Model.User;
@@ -113,6 +116,87 @@ public class Mapper {
                 .createdAt(
                         rs.getTimestamp("created_at") != null
                         ? rs.getTimestamp("created_at").toLocalDateTime()
+                        : null
+                )
+                .isDeleted(rs.getBoolean("is_deleted"))
+                .build();
+    }
+
+    public static Enrollment extractEnrollment(ResultSet rs) throws SQLException {
+
+        // Map Student (User)
+        User student = null;
+
+        int studentId = rs.getInt("student_id");
+        if (!rs.wasNull()) {
+            student = User.builder()
+                    .id((long) studentId)
+                    .fullName(rs.getString("fullname"))
+                    .email(rs.getString("email"))
+                    .phone(rs.getString("phone"))
+                    .dateOfBirth(
+                            rs.getDate("date_of_birth") != null
+                            ? rs.getDate("date_of_birth").toLocalDate()
+                            : null
+                    )
+                    .build();
+        }
+
+        // Map Enum status
+        EnrollmentStatus status = null;
+        String statusStr = rs.getString("status");
+        if (statusStr != null) {
+            status = EnrollmentStatus.valueOf(statusStr.toUpperCase());
+        }
+
+        return Enrollment.builder()
+                .id(rs.getLong("id"))
+                .student(student)
+                .classId(rs.getInt("class_id"))
+                .enrolledAt(
+                        rs.getTimestamp("enrolled_at") != null
+                        ? rs.getTimestamp("enrolled_at").toLocalDateTime()
+                        : null
+                )
+                .status(status)
+                .paid(rs.getInt("paid"))
+                .createdAt(
+                        rs.getTimestamp("created_at") != null
+                        ? rs.getTimestamp("created_at").toLocalDateTime()
+                        : null
+                )
+                .updatedAt(
+                        rs.getTimestamp("updated_at") != null
+                        ? rs.getTimestamp("updated_at").toLocalDateTime()
+                        : null
+                )
+                .isDeleted(rs.getBoolean("is_deleted"))
+                .build();
+    }
+    
+    public static ClassSchedule extractClassSchedule(ResultSet rs) throws SQLException {
+        return ClassSchedule.builder()
+                .id(rs.getLong("id"))
+                .classId(rs.getInt("class_id"))
+                .dayOfWeek(rs.getInt("day_of_week"))
+                .startTime(
+                        rs.getTime("start_time") != null
+                        ? rs.getTime("start_time").toLocalTime()
+                        : null
+                )
+                .endTime(
+                        rs.getTime("end_time") != null
+                        ? rs.getTime("end_time").toLocalTime()
+                        : null
+                )
+                .createdAt(
+                        rs.getTimestamp("created_at") != null
+                        ? rs.getTimestamp("created_at").toLocalDateTime()
+                        : null
+                )
+                .updatedAt(
+                        rs.getTimestamp("updated_at") != null
+                        ? rs.getTimestamp("updated_at").toLocalDateTime()
                         : null
                 )
                 .isDeleted(rs.getBoolean("is_deleted"))

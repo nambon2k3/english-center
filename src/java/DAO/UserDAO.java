@@ -106,8 +106,55 @@ public class UserDAO extends BaseDAO {
 
         return users;
     }
-    
-    
+
+    public List<User> getUsersByRoleId(int roleId, String searchContent, int page, int pageSize, Long classID) {
+
+        StringBuilder sql = new StringBuilder("""
+            SELECT u.*, r.id AS role_id, r.role_name
+            FROM users u
+            LEFT JOIN roles r ON u.role_id = r.id
+            WHERE u.role_id = ? AND NOT EXISTS (
+                SELECT 1 
+                FROM enrollments e 
+                WHERE e.student_id = u.id 
+                  AND e.class_id = ?
+                  AND e.is_deleted = FALSE
+            )
+        """);
+
+        List<Object> params = new ArrayList<>();
+        params.add(roleId);
+        params.add(classID);
+
+        if (searchContent != null && !searchContent.isBlank()) {
+            sql.append(" AND (u.full_name LIKE ? OR u.phone LIKE ?) ");
+            params.add("%" + searchContent.trim() + "%");
+            params.add("%" + searchContent.trim() + "%");
+        }
+
+
+        List<User> users = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                users.add(Mapper.extractUser(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("[UserDAO] getUsersByRoleId: Failed with error: " + e.getMessage());
+        }
+
+        return users;
+    }
+
     public List<User> getUsersByRoleId(int roleId) {
 
         String sql = """
@@ -142,14 +189,53 @@ public class UserDAO extends BaseDAO {
 
         return users;
     }
-    
 
+    public int countStudents(int roleId, String searchContent, Long classID) {
+
+        StringBuilder sql = new StringBuilder("""
+            SELECT COUNT(*)
+            FROM users u
+            JOIN enrollments e ON e.student_id = u.id
+            WHERE e.class_id = ?
+            WHERE role_id = ?
+        """);
+
+        List<Object> params = new ArrayList<>();
+        params.add(classID);
+        params.add(roleId);
+
+        if (searchContent != null && !searchContent.isBlank()) {
+            sql.append(" AND (u.full_name LIKE ? OR u.phone LIKE ?) ");
+            params.add("%" + searchContent.trim() + "%");
+            params.add("%" + searchContent.trim() + "%");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("[UserDAO] countStudents: Failed with error: " + e.getMessage());
+        }
+
+        return 0;
+    }
+    
     public int countStudents(int roleId, String searchContent) {
 
         StringBuilder sql = new StringBuilder("""
             SELECT COUNT(*)
-            FROM users
-            WHERE role_id = ?
+            FROM users u
+            WHERE role_id = ? 
         """);
 
         List<Object> params = new ArrayList<>();
