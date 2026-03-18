@@ -59,6 +59,35 @@ public class UserDAO extends BaseDAO {
 
         return null;
     }
+    
+    public User getUserByUsername(String username) {
+
+        String sql = """
+            SELECT u.*, r.id AS role_id, r.role_name
+            FROM users u
+            LEFT JOIN roles r ON u.role_id = r.id
+            WHERE u.username = ?
+            AND u.is_deleted = 0
+            LIMIT 1
+            """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return Mapper.extractUser(rs);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("[UserDAO] login: Failed to login with error: " + e.getMessage());
+        }
+
+        return null;
+    }
 
     public List<User> getUsersByRoleId(int roleId, String searchContent, int page, int pageSize) {
 
